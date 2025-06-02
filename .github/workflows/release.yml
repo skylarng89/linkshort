@@ -1,0 +1,80 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write # to be able to publish a GitHub release
+  issues: write # to be able to comment on released issues/PRs
+  pull-requests: write # to be able to comment on released PRs
+  id-token: write # to enable OIDC for npm provenance
+
+jobs:
+  release-backend:
+    name: Release Backend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Need full history for semantic-release
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18' # Match Node.js version in techContext.md
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install backend dependencies
+        run: npm ci
+
+      # - name: Run backend tests # Optional: CI workflow should ideally cover this before merge to main
+      #   run: npm test
+
+      - name: Authenticate with Git
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+      
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }} # If publishing to npm, otherwise remove
+        run: npx semantic-release
+
+  # TODO: Add job for frontend release when frontend is set up
+  # release-frontend:
+  #   name: Release Frontend
+  #   runs-on: ubuntu-latest
+  #   needs: release-backend # Optional: if frontend release depends on backend
+  #   defaults:
+  #     run:
+  #       working-directory: ./frontend
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0
+  #     - name: Set up Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: '18'
+  #         cache: 'npm'
+  #         cache-dependency-path: frontend/package-lock.json
+  #     - name: Install frontend dependencies
+  #       run: npm ci
+  #     # - name: Run frontend tests
+  #     #   run: npm test
+  #     # - name: Build frontend
+  #     #   run: npm run build
+  #     - name: Release
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #         # NPM_TOKEN: ${{ secrets.NPM_TOKEN }} # If publishing frontend package
+  #       run: npx semantic-release

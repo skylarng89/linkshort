@@ -24,5 +24,14 @@ A URL shortening service built with Vue 3 + Composition API + SFC for the fronte
 3. Configure database and Redis connections
 4. Run the backend server and frontend app
 
+## Versioning and Releases
+This project uses [Semantic Versioning (SemVer)](http://semver.org/) for its releases.
+Release versions (e.g., `v1.0.0`, `v1.0.1-beta.1`) are managed automatically using [semantic-release](https://github.com/semantic-release/semantic-release) based on [Conventional Commits](https://www.conventionalcommits.org/).
+
+- **Releases**: New versions are automatically released to GitHub when changes are merged into the `main` branch.
+- **Changelog**: A `CHANGELOG.md` is automatically generated for each package (`backend/CHANGELOG.md`, etc.) with each release.
+- **Development Branch**: The `dev` branch is used for ongoing development. Pull requests should be made against `dev`.
+- **Commit Messages**: Please follow the commit conventions outlined in [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## License
 MIT License
