@@ -1,4 +1,4 @@
-# LinkShort Project
+# LinkShort
 
 Author: Patrick Aziken
 
