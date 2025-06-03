@@ -3,8 +3,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 
-// TODO: Import routes
-// const linkRoutes = require('./routes/linkRoutes');
+const { apiRouter, redirectRouter } = require('./routes/linkRoutes');
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
@@ -16,14 +15,19 @@ app.use(morgan('dev')); // HTTP request logger middleware
 app.use(express.json()); // Parse JSON bodies
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 
-// TODO: Mount routes
-// app.use('/api/links', linkRoutes);
-// app.use('/', redirectRoute); // For root-level short code redirects
+// Mount API routes
+app.use('/api', apiRouter);
 
-// Basic route for testing
-app.get('/', (req, res) => {
-  res.send('LinkShort Backend is running!');
+// Basic route for testing (can be removed or kept)
+app.get('/health', (req, res) => { // Changed from '/' to '/health' to avoid conflict with redirect
+  res.status(200).json({ status: 'success', message: 'LinkShort Backend is running!' });
 });
+
+// Mount redirect routes - this should be AFTER specific API routes
+// and ideally before the general error handler if it might catch valid short codes as 404s.
+// However, the redirect handler itself handles 404s for non-existent short codes.
+app.use('/', redirectRouter);
+
 
 // Centralized error handling middleware - should be last
 app.use(errorHandler);

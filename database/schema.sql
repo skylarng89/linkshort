@@ -1,6 +1,9 @@
 -- Drop tables if they exist to ensure a clean slate (optional, for development)
 DROP TABLE IF EXISTS clicks;
 DROP TABLE IF EXISTS links;
+
+-- Sequence for generating unique IDs for short codes
+CREATE SEQUENCE IF NOT EXISTS link_id_seq START 1;
 DROP TABLE IF EXISTS users; -- If user accounts are implemented
 DROP TABLE IF EXISTS bulk_jobs; -- If bulk processing is implemented
 
