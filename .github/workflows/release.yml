@@ -6,10 +6,10 @@ on:
       - main
 
 permissions:
-  contents: write # to be able to publish a GitHub release
-  issues: write # to be able to comment on released issues/PRs
-  pull-requests: write # to be able to comment on released PRs
-  id-token: write # to enable OIDC for npm provenance
+  contents: write
+  issues: write
+  pull-requests: write
+  id-token: write
 
 jobs:
   release-backend:
@@ -22,20 +22,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Need full history for semantic-release
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18' # Match Node.js version in techContext.md
+          node-version: '22'
           cache: 'npm'
           cache-dependency-path: backend/package-lock.json
 
       - name: Install backend dependencies
         run: npm ci
-
-      # - name: Run backend tests # Optional: CI workflow should ideally cover this before merge to main
-      #   run: npm test
 
       - name: Authenticate with Git
         run: |
@@ -45,7 +42,6 @@ jobs:
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }} # If publishing to npm, otherwise remove
         run: npx semantic-release
 
   # TODO: Add job for frontend release when frontend is set up

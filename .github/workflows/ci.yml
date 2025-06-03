@@ -33,7 +33,7 @@ jobs:
       - name: Run linters
         run: npm run lint --if-present
 
-      # - name: Run backend tests # Assuming Jest is configured
+      # - name: Run backend tests
       #   run: npm test
 
   # TODO: Add job for frontend tests and linting when frontend is set up
