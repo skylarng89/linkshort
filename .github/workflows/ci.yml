@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - dev
-  push: # Also run on direct pushes to dev for early feedback, though PRs are preferred
+  push:
     branches:
       - dev
 
@@ -23,15 +23,15 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18' # Match Node.js version in techContext.md
+          node-version: '22'
           cache: 'npm'
           cache-dependency-path: backend/package-lock.json
 
       - name: Install backend dependencies
         run: npm ci
 
-      - name: Run linters # Assuming ESLint is configured (TODO: Add ESLint config)
-        run: npm run lint --if-present # Fails if lint script exists and fails
+      - name: Run linters
+        run: npm run lint --if-present
 
       # - name: Run backend tests # Assuming Jest is configured
       #   run: npm test
